@@ -52,6 +52,11 @@ class JavascriptLexer(RegexLexer):
             (r'//.*?$', Comment.Single),
             (r'/\*.*?\*/', Comment.Multiline)
         ],
+        'functiondef': [
+            (r'(' + JS_IDENT + r')(\s*)', bygroups(Name.Function, Whitespace),
+                '#pop'),
+            include('slashstartsregex'),
+        ],
         'slashstartsregex': [
             include('commentsandwhitespace'),
             (r'/(\\.|[^[/\\\n]|\[(\\.|[^\]\\\n])*])+/'
@@ -91,7 +96,8 @@ class JavascriptLexer(RegexLexer):
             (r'(for|in|while|do|break|return|continue|switch|case|default|if|else|'
              r'throw|try|catch|finally|yield|await|async|this|of|static|export|'
              r'import|debugger|extends|super)\b', Keyword, 'slashstartsregex'),
-            (r'(var|let|const|with|function|class)\b', Keyword.Declaration, 'slashstartsregex'),
+            (r'function\b', Keyword.Declaration, 'functiondef'),
+            (r'(var|let|const|with|class)\b', Keyword.Declaration, 'slashstartsregex'),
 
             (r'(abstract|boolean|byte|char|double|enum|final|float|goto|'
              r'implements|int|interface|long|native|package|private|protected|'
